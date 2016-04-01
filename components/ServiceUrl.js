@@ -23,7 +23,7 @@ class ServiceUrl extends Component {
         return (
             <div>
                 <p>Current url to service is {serviceUrl}</p>
-                <button onClick={() => onChange("http://localhost:8080")}>Set to localhost</button>
+                <button onClick={() => onChange("http://localhost:9999")}>Set to localhost</button>
                 <br/>
                 <button onClick={() => onChange("http://quide.jaje.ninja")}>Set to Internet</button>
                 <br/>

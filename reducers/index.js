@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux'
-import {CHANGE_URL, CREATE_CPU} from '../constants/ActionTypes'
+import {CHANGE_URL, HANDLE_NEW_CPU, SELECT_CPU} from '../constants/ActionTypes'
 
 
-function serviceUrl(state = "http://localhost:8080", action) {
+function serviceUrl(state = "http://localhost:9999", action) {
     switch (action.type) {
         case CHANGE_URL:
             return action.newUrl;
@@ -11,10 +11,18 @@ function serviceUrl(state = "http://localhost:8080", action) {
     }
 }
 
-function selectedReddit(state = 'reactjs', action) {
+function machineState(state = {cpus: [], selected: null}, action) {
     switch (action.type) {
-        case CREATE_CPU:
-            return action.reddit;
+        case SELECT_CPU:
+            return Object.assign({}, state, {selected: action.id});
+        case HANDLE_NEW_CPU:
+            return {
+                cpus: [
+                    action.data,
+                    ...state.cpus
+                ],
+                selected: action.data.id
+            };
         default:
             return state
     }
@@ -57,7 +65,7 @@ function selectedReddit(state = 'reactjs', action) {
 // }
 
 const rootReducer = combineReducers({
-    selectedReddit,
+    machineState,
     serviceUrl
 })
 

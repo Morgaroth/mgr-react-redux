@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import ServiceUrl from "../components/ServiceUrl";
+import MachineState from "../components/MachineState";
 import * as Actions from "../actions";
 
 class App extends Component {
@@ -11,6 +12,7 @@ class App extends Component {
             <div>
                 <p>Here is App controls {JSON.stringify(this.props)}</p>
                 <ServiceUrl serviceUrl={serviceUrl} onChange={actions.changeServiceURL}/>
+                <MachineState serviceUrl={serviceUrl}/>
             </div>
         )
     }
@@ -18,7 +20,7 @@ class App extends Component {
 
 App.propTypes = {
     serviceUrl: PropTypes.string.isRequired,
-    machine: PropTypes.object,
+    machineState: PropTypes.object,
     cpuState: PropTypes.object,
     actions: PropTypes.object
 };
