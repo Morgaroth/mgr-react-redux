@@ -1,9 +1,9 @@
 import {combineReducers} from "redux";
-import * as T from "../constants/ActionTypes";
+import * as types from "../constants/ActionTypes";
 
 function serviceUrl(state = "http://localhost:9999", action) {
     switch (action.type) {
-        case T.CHANGE_URL:
+        case types.CHANGE_URL:
             return action.newUrl;
         default:
             return state
@@ -12,13 +12,13 @@ function serviceUrl(state = "http://localhost:9999", action) {
 
 function machineState(state = {cpus: [], selected: null}, action) {
     switch (action.type) {
-        case T.SELECT_CPU:
+        case types.SELECT_CPU:
             return Object.assign({}, state, {selected: action.id});
-        case T.HANDLE_NEW_CPU:
+        case types.HANDLE_NEW_CPU:
             return {
                 cpus: [
-                    action.data,
-                    ...state.cpus
+                    ...state.cpus,
+                    action.data
                 ],
                 selected: action.data.id
             };
@@ -29,7 +29,7 @@ function machineState(state = {cpus: [], selected: null}, action) {
 
 function algorithms(state = {}, action) {
     switch (action.type) {
-        case T.ADD_GATE_TO_ALG:
+        case types.ADD_GATE_TO_ALG:
             let obj = Object.assign({});
             obj[action.cpuId] = [
                 {
@@ -37,7 +37,7 @@ function algorithms(state = {}, action) {
                     gate: action.gate,
                     qbit: action.qbit
                 },
-                ...(state[action.cpuId].filter((g) =>
+                ...((state[action.cpuId] || []).filter((g) =>
                     g.position !== action.position || g.qbit != action.qbit
                 ))
             ];
@@ -49,7 +49,7 @@ function algorithms(state = {}, action) {
 
 function cpuState(state = {}, action) {
     switch (action.type) {
-        case T.HANDLE_CPU:
+        case types.HANDLE_CPU:
             return action.data;
         default:
             return state

@@ -12,7 +12,7 @@ class CPUState extends Component {
         const {cpuState, algorithms} = this.props;
         return (
             <div>
-                <Algorithm knightPosition={[0,0]} registerSize={5} gates={algorithms[cpuState.id] || []}/>
+                <Algorithm registerSize={5} gates={algorithms[cpuState.id] || []}/>
             </div>
         )
     }

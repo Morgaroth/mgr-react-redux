@@ -53,7 +53,7 @@ export function executeCreateCPU(newCpuSize) {
             },
             body: JSON.stringify({size: newCpuSize})
         }).then(response => response.json())
-            .then(json =>dispatch(handleNewCPU(json)))
+            .then(json => dispatch(handleNewCPU(json)))
             .then(() => dispatch(fetchSelectedCPU()));
 
     }
