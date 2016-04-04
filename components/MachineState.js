@@ -6,18 +6,17 @@ import * as Actions from "../actions";
 
 class MachineState extends Component {
     render() {
-        const {serviceUrl, actions} = this.props;
+        const {actions} = this.props;
         return (
             <div>
                 <p>Here is machine state!</p>
-                <button onClick={() => actions.executeCreateCPU(serviceUrl, 4)}/>
+                <button onClick={() => actions.executeCreateCPU(4)}/>
             </div>
         )
     }
 }
 
 MachineState.propTypes = {
-    serviceUrl: PropTypes.string.isRequired,
     actions: PropTypes.object
 };
 

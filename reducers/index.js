@@ -1,10 +1,9 @@
-import {combineReducers} from 'redux'
-import {CHANGE_URL, HANDLE_NEW_CPU, SELECT_CPU} from '../constants/ActionTypes'
-
+import {combineReducers} from "redux";
+import * as T from "../constants/ActionTypes";
 
 function serviceUrl(state = "http://localhost:9999", action) {
     switch (action.type) {
-        case CHANGE_URL:
+        case T.CHANGE_URL:
             return action.newUrl;
         default:
             return state
@@ -13,9 +12,9 @@ function serviceUrl(state = "http://localhost:9999", action) {
 
 function machineState(state = {cpus: [], selected: null}, action) {
     switch (action.type) {
-        case SELECT_CPU:
+        case T.SELECT_CPU:
             return Object.assign({}, state, {selected: action.id});
-        case HANDLE_NEW_CPU:
+        case T.HANDLE_NEW_CPU:
             return {
                 cpus: [
                     action.data,
@@ -27,46 +26,41 @@ function machineState(state = {cpus: [], selected: null}, action) {
             return state
     }
 }
-//
-// function posts(state = {isFetching: false, didInvalidate: false, items: []}, action) {
-//     switch (action.type) {
-//         case INVALIDATE_REDDIT:
-//             return Object.assign({}, state, {
-//                 didInvalidate: true
-//             })
-//         case REQUEST_POSTS:
-//             return Object.assign({}, state, {
-//                 isFetching: true,
-//                 didInvalidate: false
-//             })
-//         case RECEIVE_POSTS:
-//             return Object.assign({}, state, {
-//                 isFetching: false,
-//                 didInvalidate: false,
-//                 items: action.posts,
-//                 lastUpdated: action.receivedAt
-//             })
-//         default:
-//             return state
-//     }
-// }
-//
-// function postsByReddit(state = {}, action) {
-//     switch (action.type) {
-//         case INVALIDATE_REDDIT:
-//         case RECEIVE_POSTS:
-//         case REQUEST_POSTS:
-//             return Object.assign({}, state, {
-//                 [action.reddit]: posts(state[action.reddit], action)
-//             })
-//         default:
-//             return state
-//     }
-// }
+
+function algorithms(state = {}, action) {
+    switch (action.type) {
+        case T.ADD_GATE_TO_ALG:
+            let obj = Object.assign({});
+            obj[action.cpuId] = [
+                {
+                    position: action.position,
+                    gate: action.gate,
+                    qbit: action.qbit
+                },
+                ...(state[action.cpuId].filter((g) =>
+                    g.position !== action.position || g.qbit != action.qbit
+                ))
+            ];
+            return Object.assign({}, state, obj);
+        default:
+            return state;
+    }
+}
+
+function cpuState(state = {}, action) {
+    switch (action.type) {
+        case T.HANDLE_CPU:
+            return action.data;
+        default:
+            return state
+    }
+}
 
 const rootReducer = combineReducers({
     machineState,
-    serviceUrl
-})
+    serviceUrl,
+    algorithms,
+    cpuState
+});
 
 export default rootReducer

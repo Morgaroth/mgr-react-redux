@@ -3,16 +3,18 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import ServiceUrl from "../components/ServiceUrl";
 import MachineState from "../components/MachineState";
+import CPUState from "../components/CPUState";
 import * as Actions from "../actions";
 
 class App extends Component {
     render() {
-        const {serviceUrl, actions} = this.props;
+        const {serviceUrl, actions, cpuState} = this.props;
         return (
             <div>
                 <p>Here is App controls {JSON.stringify(this.props)}</p>
                 <ServiceUrl serviceUrl={serviceUrl} onChange={actions.changeServiceURL}/>
-                <MachineState serviceUrl={serviceUrl}/>
+                <MachineState />
+                <CPUState />
             </div>
         )
     }
