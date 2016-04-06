@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import ServiceUrl from "../components/ServiceUrl";
-import MachineState from "../components/MachineState";
+import ServerState from "../components/ServerState";
 import CPUState from "../components/CPUState";
 import * as Actions from "../actions";
 
@@ -11,8 +11,8 @@ class App extends Component {
         const {serviceUrl, actions, cpuState} = this.props;
         return (
             <div>
-                <ServiceUrl serviceUrl={serviceUrl} onChange={actions.changeServiceURL}/>
-                <MachineState />
+                <ServiceUrl serviceUrl={serviceUrl} onChange={actions.changeServiceURL}/><hr/>
+                <ServerState />
                 <CPUState />
                 <hr/>
                 <p>Here is entire app state:</p>

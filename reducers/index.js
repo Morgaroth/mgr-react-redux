@@ -10,7 +10,7 @@ function serviceUrl(state = "http://localhost:9999", action) {
     }
 }
 
-function machineState(state = {cpus: [], selected: null}, action) {
+function serverState(state = {cpus: [], selected: null}, action) {
     switch (action.type) {
         case types.SELECT_CPU:
             return Object.assign({}, state, {selected: action.id});
@@ -57,7 +57,7 @@ function cpuState(state = {}, action) {
 }
 
 const rootReducer = combineReducers({
-    machineState,
+    serverState,
     serviceUrl,
     algorithms,
     cpuState

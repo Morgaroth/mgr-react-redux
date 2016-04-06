@@ -2,9 +2,9 @@ import React, {Component, PropTypes} from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import * as Actions from "../actions";
+import List from 'react-list-select';
 
-
-class MachineState extends Component {
+class ServerState extends Component {
 
     constructor(props) {
         super(props);
@@ -12,30 +12,49 @@ class MachineState extends Component {
     }
 
     render() {
-        const {actions} = this.props;
+        const {actions, selected, available} = this.props;
         var updateCPUSize = () => {
             let newValue = document.getElementById("new.cpu.size").valueAsNumber;
             this.setState({size: newValue})
         };
+        var header = <a>Selected CPU: {selected}</a>;
+        var list = <List items={available.map((x) => { return "" + x.size +"qbits, "+x.id})}
+                         selected={available.map((x) => x.id).indexOf(selected)}
+                         multiple={false}
+                         onChange={(selected) => {actions.selectCPU(available[selected].id)}}/>;
+
+        if (selected === 'undefined' || selected == null) {
+            header = <a>No available computers.</a>;
+            list = undefined;
+        }
         return (
             <div>
                 <input id="new.cpu.size" type="number" onChange={updateCPUSize}/>
                 <button onClick={() => actions.executeCreateCPU(this.state.size)}>Create new CPU with {this.state.size}qbit
                     register
                 </button>
+                <br/>
+                {header}
+                {list}
             </div>
         )
     }
 }
 
-MachineState.propTypes = {
-    actions: PropTypes.object
+ServerState.propTypes = {
+    actions: PropTypes.object,
+    available: PropTypes.array,
+    selected: PropTypes.string
 };
 
 
 function mapStateToProps(state) {
     console.log("mapStateToProps: " + JSON.stringify(state));
-    return state;
+    return {
+        serviceUrl: state.serviceUrl,
+        available: state.serverState.cpus,
+        selected: state.serverState.selected || state.serverState.cpus[0]
+    };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -47,4 +66,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(MachineState)
+)(ServerState)

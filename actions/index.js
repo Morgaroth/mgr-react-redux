@@ -37,8 +37,8 @@ export function handleCPUData(json) {
 export function fetchSelectedCPU() {
     return (dispatch, getState) => {
         let state = getState();
-        console.log("fetchSelectedCPU: state is " + JSON.stringify(state));
-        return fetch(state.serviceUrl + '/cpu/' + state.machineState.selected).then(response => response.json())
+        // console.log("fetchSelectedCPU: state is " + JSON.stringify(state));
+        return fetch(state.serviceUrl + '/cpu/' + state.serverState.selected).then(response => response.json())
             .then(json => dispatch(handleCPUData(json)))
     }
 }

@@ -3,6 +3,7 @@ import React, {Component, PropTypes} from "react";
 
 class ServiceUrl extends Component {
 
+
     handleEnter(e) {
         if (e.keyCode === 13) {
             this.setUrl();
@@ -22,18 +23,19 @@ class ServiceUrl extends Component {
         const {serviceUrl, onChange} = this.props;
         return (
             <div>
-                <p>Current url to service is {serviceUrl}</p>
+                <a>Current url to service is {serviceUrl}</a><br/>
                 <button onClick={() => onChange("http://localhost:9999")}>Set to localhost</button>
-                <br/>
                 <button onClick={() => onChange("http://quide.jaje.ninja")}>Set to Internet</button>
-                <br/>
                 <button onClick={this.setUrl.bind(this)}>Set to:</button>
-                <input id="serviceurl.input" default={serviceUrl} onkeyup={this.handleEnter.bind(this)}/>
+                <input id="serviceurl.input" type="url" defaultValue={serviceUrl} onkeyup={this.handleEnter.bind(this)}/>
             </div>
         )
     }
 }
 
+ServiceUrl.defaultProps = {
+    serviceUrl: "http://localhost:9999"
+};
 
 ServiceUrl.propTypes = {
     serviceUrl: PropTypes.string.isRequired,

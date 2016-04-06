@@ -22,7 +22,7 @@ class GatesPalette extends React.Component {
 
 function mapStateToProps(state) {
     console.log("GatesPalette: state" + JSON.stringify(state));
-    return {cpu: state.machineState.selected}
+    return {cpu: state.serverState.selected}
 }
 
 function mapDispatchToProps(dispatch) {
