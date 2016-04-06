@@ -1,14 +1,14 @@
 import React, {Component, PropTypes} from "react";
-import {ItemTypes} from "../algorithm/Constants";
+import {ItemTypes} from "./algorithm/Constants";
 import {DragSource} from "react-dnd";
-import {NoopHref} from "../../aliases/index";
+import {NoopHref} from "../aliases/index";
 
 const gateSource = {
     beginDrag(props) {
         console.log("begin drag " + JSON.stringify(props));
         return {
             gate: {type: props.type},
-            cpu: props.cpuId,
+            cpuId: props.cpuId,
             publish: props.dis
         };
     }
@@ -26,7 +26,7 @@ class Gate extends React.Component {
         const {size, connectDragSource, href} = this.props;
         return connectDragSource(
             <div style={{fontWeight: 'bold', cursor: 'move'}}>
-                <img width={size} src={href || NoopHref}/>
+                <img height={size} width={size*1.475} src={href || NoopHref}/>
             </div>)
     }
 }

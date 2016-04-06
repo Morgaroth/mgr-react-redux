@@ -11,10 +11,12 @@ class App extends Component {
         const {serviceUrl, actions, cpuState} = this.props;
         return (
             <div>
-                <p>Here is App controls {JSON.stringify(this.props)}</p>
                 <ServiceUrl serviceUrl={serviceUrl} onChange={actions.changeServiceURL}/>
                 <MachineState />
                 <CPUState />
+                <hr/>
+                <p>Here is entire app state:</p>
+                <pre>{JSON.stringify(this.props, null, 3)}</pre>
             </div>
         )
     }

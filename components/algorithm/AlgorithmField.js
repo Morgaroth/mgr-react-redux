@@ -13,7 +13,7 @@ const gateTarget = {
         console.log("drop", props);
         console.log("push", monitor.getItem());
         // moveKnight(props.x, props.y);
-        monitor.getItem().publish(monitor.getItem().gate, props.cpu, props.qbit, props.position)
+        monitor.getItem().publish(monitor.getItem().gate, monitor.getItem().cpuId, props.qbit, props.position)
     }
 };
 

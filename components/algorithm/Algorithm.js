@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {DragDropContext} from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import AlgorithmField from "./AlgorithmField";
-import Gate from "../gates/Gate";
+import Gate from "../Gate";
 import GatesPalette from "./GatesPalette";
 import {PauliXHref, PauliYHref, PauliZHref, HadamardHref, NoopHref} from "../../aliases/index";
 
@@ -25,7 +25,7 @@ class Algorithm extends Component {
             g = <Gate href={href}/>
         }
         return (
-            <div key={divKey} style={{    width: '12.5%', height: '12.5%' }}>
+            <div key={divKey} style={{   /* width: '12.5%',*/ height: '12.5%' }}>
                 <AlgorithmField qbit={qbit} position={position}>
                     {g || <Gate />}
                 </AlgorithmField>
