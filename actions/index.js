@@ -34,6 +34,12 @@ export function handleCPUData(json) {
     }
 }
 
+export function refreshCPUList(json) {
+    return {
+        type: types.REFRESH_CPU_LIST, data: json
+    }
+}
+
 export function fetchSelectedCPU() {
     return (dispatch, getState) => {
         let state = getState();
@@ -54,6 +60,15 @@ export function executeCreateCPU(newCpuSize) {
             body: JSON.stringify({size: newCpuSize})
         }).then(response => response.json())
             .then(json => dispatch(handleNewCPU(json)))
+            .then(() => dispatch(fetchSelectedCPU()));
+
+    }
+}
+
+export function fetchCPUsFromServer() {
+    return (dispatch, getState) => {
+        return fetch(getState().serviceUrl + '/cpu').then(response => response.json())
+            .then(json => dispatch(refreshCPUList(json)))
             .then(() => dispatch(fetchSelectedCPU()));
 
     }

@@ -14,6 +14,15 @@ function serverState(state = {cpus: [], selected: null}, action) {
     switch (action.type) {
         case types.SELECT_CPU:
             return Object.assign({}, state, {selected: action.id});
+        case types.REFRESH_CPU_LIST:
+            if (action.data.length !== 'undefined' && action.data.length > 0) {
+                return {
+                    cpus: action.data,
+                    selected: action.data[0].id
+                }
+            } else {
+                return state
+            }
         case types.HANDLE_NEW_CPU:
             return {
                 cpus: [

@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import * as Actions from "../actions";
-import List from 'react-list-select';
+import List from "react-list-select";
 
 class ServerState extends Component {
 
@@ -29,6 +29,8 @@ class ServerState extends Component {
         }
         return (
             <div>
+                <button onClick={() => actions.fetchCPUsFromServer()}>Refresh</button>
+                <br/>
                 <input id="new.cpu.size" type="number" onChange={updateCPUSize}/>
                 <button onClick={() => actions.executeCreateCPU(this.state.size)}>Create new CPU with {this.state.size}qbit
                     register
