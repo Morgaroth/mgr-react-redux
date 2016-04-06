@@ -9,7 +9,6 @@ import * as Actions from "../../actions";
 class GatesPalette extends React.Component {
     render() {
         let {cpu, actions} = this.props;
-        console.log("gates cpu" + cpu);
         return <div style={{display: "flex", flexWrap: "wrap"}}>
             <Gate type="N" cpuId={cpu} dis={actions.addGateToAlgo}/>
             <Gate href={HadamardHref} type="H" cpuId={cpu} dis={actions.addGateToAlgo}/>
@@ -21,7 +20,6 @@ class GatesPalette extends React.Component {
 }
 
 function mapStateToProps(state) {
-    console.log("GatesPalette: state" + JSON.stringify(state));
     return {cpu: state.serverState.selected}
 }
 

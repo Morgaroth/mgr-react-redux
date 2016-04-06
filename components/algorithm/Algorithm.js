@@ -68,7 +68,6 @@ Algorithm.propTypes = {
 //
 
 function mapStateToProps(state) {
-    console.log("mapStateToProps: " + JSON.stringify(state));
     return {
         serviceUrl: state.serviceUrl,
         available: state.serverState.cpus,
