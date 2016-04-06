@@ -40,17 +40,26 @@ function algorithms(state = {}, action) {
     switch (action.type) {
         case types.ADD_GATE_TO_ALG:
             let obj = Object.assign({});
-            obj[action.cpuId] = [
-                {
-                    position: action.position,
-                    gate: action.gate,
-                    qbit: action.qbit
-                },
-                ...((state[action.cpuId] || []).filter((g) =>
-                    g.position !== action.position || g.qbit != action.qbit
-                ))
-            ];
-            return Object.assign({}, state, obj);
+            if (action.gate.type != 'N') {
+                obj[action.cpuId] = [
+                    {
+                        position: action.position,
+                        gate: action.gate,
+                        qbit: action.qbit
+                    },
+                    ...((state[action.cpuId] || []).filter((g) =>
+                        g.position !== action.position || g.qbit != action.qbit
+                    ))
+                ];
+                return Object.assign({}, state, obj);
+            } else {
+                obj[action.cpuId] = [
+                    ...((state[action.cpuId] || []).filter((g) =>
+                        g.position !== action.position || g.qbit != action.qbit
+                    ))
+                ];
+                return Object.assign({}, state, obj);
+            }
         default:
             return state;
     }
