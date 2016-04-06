@@ -12,8 +12,9 @@ class App extends Component {
         return (
             <div>
                 <ServiceUrl serviceUrl={serviceUrl} onChange={actions.changeServiceURL}/><hr/>
-                <ServerState />
+                <ServerState /> <hr/>
                 <CPUState />
+                <br/><br/><br/><br/>
                 <hr/>
                 <p>Here is entire app state:</p>
                 <pre>{JSON.stringify(this.props, null, 3)}</pre>

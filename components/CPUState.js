@@ -1,26 +1,27 @@
-import React, {Component, PropTypes} from 'react'
-import {bindActionCreators} from 'redux'
-import {connect} from 'react-redux'
+import React, {Component, PropTypes} from "react";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 import * as Actions from "../actions";
-
 import Algorithm from "../components/algorithm/Algorithm";
 
 
 class CPUState extends Component {
     render() {
-        console.log("CPUState: has props:" + JSON.stringify(this.props));
-        const {cpuState, algorithms} = this.props;
-        return (
-            <div>
-                <Algorithm registerSize={5} gates={algorithms[cpuState.id] || []}/>
-            </div>
-        )
+        const {cpu, algorithms, enabled} = this.props;
+        if (enabled) {
+            return (
+                <div>
+                    <Algorithm registerSize={cpu.size} gates={algorithms[cpu.id] || []}/>
+                </div>)
+        } else {
+            return <div></div>
+        }
     }
 }
 
 CPUState.propTypes = {
     cpuState: PropTypes.object.isRequired,
-    algorithms: PropTypes.object.isRequired
+    algorithms: PropTypes.object.isRequired,
 };
 
 function mapDispatchToProps(dispatch) {
@@ -30,8 +31,11 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state) {
-    console.log("CPUState: received state " + JSON.stringify(state));
-    return state;
+    const selected = state.serverState.selected;
+    return Object.assign({}, state, {
+        enabled: selected != 'undefined' && selected != null,
+        cpu: state.serverState.cpus[(state.serverState.cpus.map((x) => x.id).indexOf(selected))]
+    });
 }
 
 export default connect(

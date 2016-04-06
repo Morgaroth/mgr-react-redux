@@ -11,7 +11,10 @@ export function deleteCPU(id) {
 }
 
 export function selectCPU(id) {
-    return {type: types.SELECT_CPU, id}
+    return (dispatch) => {
+        dispatch({type: types.SELECT_CPU, id});
+        dispatch(fetchSelectedCPU())
+    }
 }
 
 export function refreshCPUList() {

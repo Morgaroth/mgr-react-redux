@@ -31,7 +31,7 @@ class ServerState extends Component {
             <div>
                 <button onClick={() => actions.fetchCPUsFromServer()}>Refresh</button>
                 <br/>
-                <input id="new.cpu.size" type="number" onChange={updateCPUSize}/>
+                <input id="new.cpu.size" type="number" defaultValue={this.state.size} onChange={updateCPUSize}/>
                 <button onClick={() => actions.executeCreateCPU(this.state.size)}>Create new CPU with {this.state.size}qbit
                     register
                 </button>
