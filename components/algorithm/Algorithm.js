@@ -8,11 +8,12 @@ import {PauliXHref, PauliYHref, PauliZHref, HadamardHref, NoopHref} from "../../
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import * as Actions from "../../actions";
+import {DefaultAlgoSize} from "../../constants/defaults";
 
 class Algorithm extends Component {
 
 
-    renderField(qbit, position) {
+    renderField(qbit, position, isNext) {
         var g = this.props.gates.find((g) => g.position === position && g.qbit === qbit);
         let divKey = "q" + qbit + "p" + position;
         var href = NoopHref;
@@ -26,13 +27,13 @@ class Algorithm extends Component {
             } else if (g.gate.type === "Z") {
                 href = PauliZHref;
             }
-            g = <Gate href={href}/>
+            g = <Gate href={href} isNextStep={isNext}/>
         }
         return (
             <td key={divKey}>
                 <div key={divKey}>
                     <AlgorithmField qbit={qbit} position={position}>
-                        {g || <Gate />}
+                        {g || <Gate isNextStep={isNext}/>}
                     </AlgorithmField>
                 </div>
             </td>
@@ -40,20 +41,20 @@ class Algorithm extends Component {
     }
 
 
-    renderRow(qbit, positions, registerSize) {
+    renderRow(qbit, registerSize, execData) {
         var squares = [];
         var name = "Q" + (registerSize - qbit - 1);
         squares.push(<td key={'fq'+qbit+'ph'}>{name}</td>);
-        for (let p = 0; p < positions; p++) {
-            squares.push(this.renderField(qbit, p));
+        for (let p = 0; p < execData.length; p++) {
+            squares.push(this.renderField(qbit, p, p === execData.position));
         }
         return <tr key={'q'+qbit}>{squares}</tr>;
     }
 
-    renderTable(registerSize, positions) {
+    renderTable(registerSize, execData) {
         var squares = [];
         for (let q = 0; q < registerSize; q++) {
-            squares.push(this.renderRow(q, positions, registerSize))
+            squares.push(this.renderRow(q, registerSize, execData))
         }
         return (<table style={{borderSpacing:0}}>
             <tbody key="rendertable">{squares}</tbody>
@@ -62,13 +63,12 @@ class Algorithm extends Component {
 
 
     render() {
-        const {registerSize, gates} = this.props;
-        let positions = Math.max(8, Math.max.apply(gates.map((g) => g.position)));
+        const {registerSize, execData} = this.props;
         return (
             <div>
                 <GatesPalette />
                 <hr/>
-                {this.renderTable(registerSize, positions)}
+                {this.renderTable(registerSize, execData)}
             </div>
         );
     }
@@ -77,17 +77,15 @@ class Algorithm extends Component {
 Algorithm.propTypes = {
     registerSize: PropTypes.number.isRequired,
     gates: PropTypes.arrayOf(PropTypes.object).isRequired,
-    positions: PropTypes.number
+    execData: PropTypes.object.isRequired
 };
-
-// export default DragDropContext(HTML5Backend)(Algorithm);
-//
 
 function mapStateToProps(state) {
     return {
         serviceUrl: state.serviceUrl,
-        available: state.serverState.cpus,
-        selected: state.serverState.selected || state.serverState.cpus[0]
+        available: state.serverState.available,
+        selected: state.serverState.selected,
+        execData: (state.execution[state.serverState.selected] || {position: 0, length: DefaultAlgoSize})
     };
 }
 

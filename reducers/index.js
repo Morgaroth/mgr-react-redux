@@ -1,5 +1,6 @@
 import {combineReducers} from "redux";
 import * as types from "../constants/ActionTypes";
+import {DefaultAlgoSize} from "../constants/defaults"
 
 function serviceUrl(state = "http://localhost:9999", action) {
     switch (action.type) {
@@ -10,14 +11,14 @@ function serviceUrl(state = "http://localhost:9999", action) {
     }
 }
 
-function serverState(state = {cpus: [], selected: null}, action) {
+function serverState(state = {available: [], selected: null}, action) {
     switch (action.type) {
         case types.SELECT_CPU:
             return Object.assign({}, state, {selected: action.id});
         case types.REFRESH_CPU_LIST:
             if (action.data.length !== 'undefined' && action.data.length > 0) {
                 return {
-                    cpus: action.data,
+                    available: action.data,
                     selected: action.data[0].id
                 }
             } else {
@@ -25,8 +26,8 @@ function serverState(state = {cpus: [], selected: null}, action) {
             }
         case types.HANDLE_NEW_CPU:
             return {
-                cpus: [
-                    ...state.cpus,
+                available: [
+                    ...state.available,
                     action.data
                 ],
                 selected: action.data.id
@@ -65,6 +66,36 @@ function algorithms(state = {}, action) {
     }
 }
 
+// execution state:
+// {
+//     cpu_id: {
+//         position: 3
+//         length: 17
+//     }
+// }
+
+function execution(state = {}, action) {
+    var update = {};
+    var actualState = state[action.cpuId] || {position: 0, length: DefaultAlgoSize};
+    switch (action.type) {
+        case types.ENSURE_ALGORITHM_LENGTH:
+            update[action.cpuId] = Object.assign({}, actualState, {length: Math.max(1, action.than + 2, actualState.length)});
+            return Object.assign({}, state, update);
+        case types.MODIFY_ALGORITHM_LENGTH:
+            update[action.cpuId] = Object.assign({}, actualState, {length: Math.max(1, actualState.length + action.delta)});
+            return Object.assign({}, state, update);
+        case types.RESET:
+            update[action.cpuId] = Object.assign({}, actualState, {position: 0});
+            return Object.assign({}, state, update);
+        case types.MOVE:
+            var newPos = Math.max(Math.min(actualState.position + action.delta, actualState.length - 1), 0);
+            update[action.cpuId] = Object.assign({}, actualState, {position: newPos});
+            return Object.assign({}, state, update);
+        default:
+            return state;
+    }
+}
+
 function cpuState(state = {}, action) {
     switch (action.type) {
         case types.HANDLE_CPU:
@@ -78,7 +109,8 @@ const rootReducer = combineReducers({
     serverState,
     serviceUrl,
     algorithms,
-    cpuState
+    cpuState,
+    execution
 });
 
 export default rootReducer

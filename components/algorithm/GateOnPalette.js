@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {ItemTypes} from "../algorithm/Constants";
 import {DragSource} from "react-dnd";
 import {NoopHref} from "../../aliases/index";
+import {DefaultGateSize} from "../../constants/defaults";
 
 const gateSource = {
     beginDrag(props) {
@@ -41,7 +42,7 @@ GateOnPalette.propTypes = {
 };
 
 GateOnPalette.defaultProps = {
-    size: 50
+    size: DefaultGateSize
 };
 
 export default DragSource(ItemTypes.GATE, gateSource, collect)(GateOnPalette);

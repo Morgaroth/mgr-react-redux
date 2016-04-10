@@ -53,8 +53,8 @@ ServerState.propTypes = {
 function mapStateToProps(state) {
     return {
         serviceUrl: state.serviceUrl,
-        available: state.serverState.cpus,
-        selected: state.serverState.selected || state.serverState.cpus[0]
+        available: state.serverState.available,
+        selected: state.serverState.selected || state.serverState.available[0]
     };
 }
 

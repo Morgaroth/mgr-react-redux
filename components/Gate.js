@@ -1,12 +1,13 @@
 import React, {Component, PropTypes} from "react";
 import {NoopHref} from "../aliases/index";
+import {DefaultGateSize} from "../constants/defaults";
 
 class Gate extends React.Component {
     render() {
         const {size, href, isNextStep} = this.props;
         const styles = {textAlign: 'center'};
         if (isNextStep) {
-            styles.append({borderLeft: '2px solid black'})
+            styles['borderLeft'] = '2px solid black'
         }
         return (
             <div style={styles}>
@@ -26,7 +27,7 @@ Gate.propTypes = {
 };
 
 Gate.defaultProps = {
-    size: 50,
+    size: DefaultGateSize,
     isNextStep: false
 };
 

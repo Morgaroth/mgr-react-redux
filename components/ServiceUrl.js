@@ -40,6 +40,6 @@ ServiceUrl.defaultProps = {
 ServiceUrl.propTypes = {
     serviceUrl: PropTypes.string.isRequired,
     onChange: PropTypes.func
-}
+};
 
 export default ServiceUrl

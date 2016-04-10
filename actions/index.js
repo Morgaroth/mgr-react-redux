@@ -78,5 +78,32 @@ export function fetchCPUsFromServer() {
 }
 
 export function addGateToAlgo(gate, cpuId, qbit, position) {
-    return {type: types.ADD_GATE_TO_ALG, gate: gate, cpuId: cpuId, qbit: qbit, position: position}
+    return (dispatch) => {
+        dispatch({type: types.ADD_GATE_TO_ALG, gate: gate, cpuId: cpuId, qbit: qbit, position: position});
+        dispatch(ensureIsMore(cpuId, position))
+    }
+}
+
+export function moveNext(cpuId) {
+    return {type: types.MOVE, cpuId: cpuId, delta: 1}
+}
+
+export function movePrev(cpuId) {
+    return {type: types.MOVE, cpuId: cpuId, delta: -1}
+}
+
+export function reset(cpuId) {
+    return {type: types.RESET, cpuId: cpuId}
+}
+
+export function addAlgoSize(cpuId) {
+    return {type: types.MODIFY_ALGORITHM_LENGTH, cpuId: cpuId, delta: 1}
+}
+
+export function subAlgoSize(cpuId) {
+    return {type: types.MODIFY_ALGORITHM_LENGTH, cpuId: cpuId, delta: -1}
+}
+
+export function ensureIsMore(cpuId, than) {
+    return {type: types.ENSURE_ALGORITHM_LENGTH, cpuId: cpuId, than: than}
 }

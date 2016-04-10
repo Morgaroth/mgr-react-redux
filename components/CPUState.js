@@ -3,7 +3,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import * as Actions from "../actions";
 import Algorithm from "../components/algorithm/Algorithm";
-
+import ControlPanel from "./ControlPanel"
 
 class CPUState extends Component {
     render() {
@@ -12,6 +12,7 @@ class CPUState extends Component {
             return (
                 <div>
                     <Algorithm registerSize={cpu.size} gates={algorithms[cpu.id] || []}/>
+                    <ControlPanel/>
                 </div>)
         } else {
             return <div></div>
@@ -21,7 +22,7 @@ class CPUState extends Component {
 
 CPUState.propTypes = {
     cpuState: PropTypes.object.isRequired,
-    algorithms: PropTypes.object.isRequired,
+    algorithms: PropTypes.object.isRequired
 };
 
 function mapDispatchToProps(dispatch) {
@@ -34,7 +35,7 @@ function mapStateToProps(state) {
     const selected = state.serverState.selected;
     return Object.assign({}, state, {
         enabled: selected != 'undefined' && selected != null,
-        cpu: state.serverState.cpus[(state.serverState.cpus.map((x) => x.id).indexOf(selected))]
+        cpu: state.serverState.available[(state.serverState.available.map((x) => x.id).indexOf(selected))]
     });
 }
 
