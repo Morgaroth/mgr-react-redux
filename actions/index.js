@@ -17,10 +17,6 @@ export function selectCPU(id) {
     }
 }
 
-export function refreshCPUList() {
-    return {type: types.REFRESH_CPU_LIST}
-}
-
 export function changeServiceURL(serviceURL) {
     return {type: types.CHANGE_URL, newUrl: serviceURL}
 }
@@ -46,9 +42,13 @@ export function refreshCPUList(json) {
 export function fetchSelectedCPU() {
     return (dispatch, getState) => {
         let state = getState();
-        // console.log("fetchSelectedCPU: state is " + JSON.stringify(state));
-        return fetch(state.serviceUrl + '/cpu/' + state.serverState.selected).then(response => response.json())
-            .then(json => dispatch(handleCPUData(json)))
+        if (state.serverState.selected != null) {
+            return fetch(state.serviceUrl + '/cpu/' + state.serverState.selected)
+                .then(response => response.json())
+                .then(data => dispatch(handleCPUData(data)))
+        } else {
+            dispatch(handleCPUData({}))
+        }
     }
 }
 
@@ -103,7 +103,6 @@ export function addAlgoSize(cpuId) {
 export function subAlgoSize(cpuId) {
     return {type: types.MODIFY_ALGORITHM_LENGTH, cpuId: cpuId, delta: -1}
 }
-
 export function ensureIsMore(cpuId, than) {
     return {type: types.ENSURE_ALGORITHM_LENGTH, cpuId: cpuId, than: than}
 }

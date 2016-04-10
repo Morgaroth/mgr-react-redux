@@ -1,6 +1,6 @@
 import {combineReducers} from "redux";
 import * as types from "../constants/ActionTypes";
-import {DefaultAlgoSize} from "../constants/defaults"
+import {DefaultAlgoSize} from "../constants/defaults";
 
 function serviceUrl(state = "http://localhost:9999", action) {
     switch (action.type) {
@@ -22,7 +22,7 @@ function serverState(state = {available: [], selected: null}, action) {
                     selected: action.data[0].id
                 }
             } else {
-                return state
+                return {available: [], selected: null}
             }
         case types.HANDLE_NEW_CPU:
             return {
@@ -61,6 +61,12 @@ function algorithms(state = {}, action) {
                 ];
                 return Object.assign({}, state, obj);
             }
+        case types.REFRESH_CPU_LIST:
+            var r = Object.assign({});
+            action.data.map((stillExist) => {
+                r[stillExist.id] = state[stillExist.id]
+            });
+            return r;
         default:
             return state;
     }
@@ -91,6 +97,12 @@ function execution(state = {}, action) {
             var newPos = Math.max(Math.min(actualState.position + action.delta, actualState.length - 1), 0);
             update[action.cpuId] = Object.assign({}, actualState, {position: newPos});
             return Object.assign({}, state, update);
+        case types.REFRESH_CPU_LIST:
+            var r = Object.assign({});
+            action.data.map((stillExist) => {
+                r[stillExist.id] = state[stillExist.id]
+            });
+            return r;
         default:
             return state;
     }
