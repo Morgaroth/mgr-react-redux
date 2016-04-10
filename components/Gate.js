@@ -1,31 +1,15 @@
 import React, {Component, PropTypes} from "react";
-import {ItemTypes} from "./algorithm/Constants";
-import {DragSource} from "react-dnd";
 import {NoopHref} from "../aliases/index";
-
-const gateSource = {
-    beginDrag(props) {
-        console.log("begin drag " + JSON.stringify(props));
-        return {
-            gate: {type: props.type},
-            cpuId: props.cpuId,
-            publish: props.dis
-        };
-    }
-};
-
-function collect(connect, monitor) {
-    return {
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
-    }
-}
 
 class Gate extends React.Component {
     render() {
-        const {size, connectDragSource, href} = this.props;
-        return connectDragSource(
-            <div style={{fontWeight: 'bold', cursor: 'move'}}>
+        const {size, href, isNextStep} = this.props;
+        const styles = {textAlign: 'center'};
+        if (isNextStep) {
+            styles.append({borderLeft: '2px solid black'})
+        }
+        return (
+            <div style={styles}>
                 <img height={size} width={size*1.475} src={href || NoopHref}/>
             </div>)
     }
@@ -37,12 +21,13 @@ Gate.propTypes = {
         PropTypes.number
     ]),
     href: PropTypes.string,
-    connectDragSource: PropTypes.func,
-    isDragging: PropTypes.bool
+    isDragging: PropTypes.bool,
+    isNextStep: PropTypes.bool.isRequired
 };
 
 Gate.defaultProps = {
-    size: 50
+    size: 50,
+    isNextStep: false
 };
 
-export default DragSource(ItemTypes.GATE, gateSource, collect)(Gate);
+export default Gate;

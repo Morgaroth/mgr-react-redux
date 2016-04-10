@@ -12,7 +12,7 @@ import * as Actions from "../../actions";
 class Algorithm extends Component {
 
 
-    renderField(qbit, position, maxPositions) {
+    renderField(qbit, position) {
         var g = this.props.gates.find((g) => g.position === position && g.qbit === qbit);
         let divKey = "q" + qbit + "p" + position;
         var href = NoopHref;
@@ -29,30 +29,46 @@ class Algorithm extends Component {
             g = <Gate href={href}/>
         }
         return (
-            <div key={divKey} style={{height:50, width: 50*1.475 }}>
-                <AlgorithmField qbit={qbit} position={position}>
-                    {g || <Gate />}
-                </AlgorithmField>
-            </div>
+            <td key={divKey}>
+                <div key={divKey}>
+                    <AlgorithmField qbit={qbit} position={position}>
+                        {g || <Gate />}
+                    </AlgorithmField>
+                </div>
+            </td>
         );
     }
+
+
+    renderRow(qbit, positions, registerSize) {
+        var squares = [];
+        var name = "Q" + (registerSize - qbit - 1);
+        squares.push(<td key={'fq'+qbit+'ph'}>{name}</td>);
+        for (let p = 0; p < positions; p++) {
+            squares.push(this.renderField(qbit, p));
+        }
+        return <tr key={'q'+qbit}>{squares}</tr>;
+    }
+
+    renderTable(registerSize, positions) {
+        var squares = [];
+        for (let q = 0; q < registerSize; q++) {
+            squares.push(this.renderRow(q, positions, registerSize))
+        }
+        return (<table style={{borderSpacing:0}}>
+            <tbody key="rendertable">{squares}</tbody>
+        </table>)
+    }
+
 
     render() {
         const {registerSize, gates} = this.props;
         let positions = Math.max(8, Math.max.apply(gates.map((g) => g.position)));
-        const squares = [];
-        for (let q = 0; q < registerSize; q++) {
-            for (let p = 0; p < positions; p++) {
-                squares.push(this.renderField(q, p, positions));
-            }
-        }
-
         return (
-            <div style={{height: 50*registerSize, width: (positions*50*1.475)}}>
+            <div>
                 <GatesPalette />
-                <div style={{display: "flex", flexWrap: "wrap"}}>
-                    {squares}
-                </div>
+                <hr/>
+                {this.renderTable(registerSize, positions)}
             </div>
         );
     }

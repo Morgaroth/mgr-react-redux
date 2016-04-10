@@ -19,9 +19,13 @@ function collect(connect, monitor) {
 
 class AlgorithmField extends Component {
     render() {
-        const {connectDropTarget, isOver, children} = this.props;
+        const {connectDropTarget, isOver, children, qbit, position} = this.props;
+        const styles = {position: 'relative', border: '1px solid white'};
+        if(isOver){
+            styles['border'] = '1px solid green';
+        }
         return connectDropTarget(
-            <div style={{position: 'relative', width: '100%', height: '100%'}}>
+            <div style={styles} key={'q'+qbit+'p'+position+'af'}>
                 {children}
             </div>
         );
