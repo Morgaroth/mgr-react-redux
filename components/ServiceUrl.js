@@ -25,7 +25,7 @@ class ServiceUrl extends Component {
             <div>
                 <a>Current url to service is {serviceUrl}</a><br/>
                 <button onClick={() => onChange("http://localhost:9999")}>Set to localhost</button>
-                <button onClick={() => onChange("http://quide.jaje.ninja")}>Set to Internet</button>
+                <button onClick={() => onChange("http://api.quide.jaje.ninja")}>Set to Internet</button>
                 <button onClick={this.setUrl.bind(this)}>Set to:</button>
                 <input id="serviceurl.input" type="url" defaultValue={serviceUrl} onkeyup={this.handleEnter.bind(this)}/>
             </div>

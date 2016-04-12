@@ -163,16 +163,15 @@ function algorithms(state = {}, action) {
                         for (var i = 0; i < gatesToFilter.length; ++i) {
                             var g = gatesToFilter[i];
                             if (SpecialGates.indexOf(g.gate.type) < 0) {
-                                if (g.gate.qbit != action.qbit) {
+                                console.log(g.gate.qbit, action.qbit, g.gate.qbit != action.qbit)
+                                if (g.qbit != action.qbit) {
                                     newGates.push(disableDirection(g))
                                 }
                             }
                         }
                         obj[action.cpuId] = [
                             ...newGates,
-                            ...(thisStateGates).filter(g =>
-                                g.position !== action.position
-                            )
+                            ...(thisStateGates).filter(r => r.position !== action.position)
                         ];
                         return Object.assign({}, state, obj);
 
