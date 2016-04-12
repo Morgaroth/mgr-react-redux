@@ -2,6 +2,42 @@ import * as types from "../constants/ActionTypes";
 import fetch from "isomorphic-fetch";
 
 
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + ((exdays || 356) * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+
+function getUserCookie() {
+    var userId = getCookie("user.id");
+    if (userId == "") {
+        userId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+        setCookie("user.id", userId);
+    }
+    return userId;
+}
+
+var userLogin = {
+    headers: {'X-User-Id': getUserCookie()},
+    mode: 'cors'
+};
+
 export function createCPU(size) {
     return {type: types.CREATE_CPU, size}
 }
@@ -43,7 +79,7 @@ export function fetchSelectedCPU() {
     return (dispatch, getState) => {
         let state = getState();
         if (state.serverState.selected != null) {
-            return fetch(state.serviceUrl + '/cpu/' + state.serverState.selected)
+            return fetch(state.serviceUrl + '/cpu/' + state.serverState.selected, userLogin)
                 .then(response => response.json())
                 .then(data => dispatch(handleCPUData(data)))
         } else {
@@ -58,8 +94,10 @@ export function executeCreateCPU(newCpuSize) {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-User-Id': getUserCookie()
             },
+            mode: 'cors',
             body: JSON.stringify({size: newCpuSize})
         }).then(response => response.json())
             .then(json => dispatch(handleNewCPU(json)))
@@ -70,10 +108,9 @@ export function executeCreateCPU(newCpuSize) {
 
 export function fetchCPUsFromServer() {
     return (dispatch, getState) => {
-        return fetch(getState().serviceUrl + '/cpu').then(response => response.json())
+        return fetch(getState().serviceUrl + '/cpu', userLogin).then(response => response.json())
             .then(json => dispatch(refreshCPUList(json)))
             .then(() => dispatch(fetchSelectedCPU()));
-
     }
 }
 
