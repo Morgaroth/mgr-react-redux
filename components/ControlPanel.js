@@ -13,7 +13,7 @@ class ControlPanel extends Component {
             <button onClick={() => actions.reset(cpuId)} style={{marginLeft:'24px'}}>Reset</button>
             <br/>
             <button onClick={() => actions.subAlgoSize(cpuId)}>Sub alg</button>
-            <button onClick={() => {return actions.moveNext(cpuId)}} style={{marginLeft:'24px', fontSize: 18}}>⇨</button>
+            <button onClick={() => actions.moveNext(cpuId)} style={{marginLeft:'24px', fontSize: 18}}>⇨</button>
         </div>)
     }
 }

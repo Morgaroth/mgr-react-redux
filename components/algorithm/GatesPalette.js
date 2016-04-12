@@ -1,19 +1,20 @@
 import React, {Component, PropTypes} from "react";
-import {PauliXHref, PauliYHref, PauliZHref, HadamardHref} from "../../aliases/index";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import * as Actions from "../../actions";
-import GateOnPallette from "./GateOnPalette"
+import GateOnPallette from "./GateOnPalette";
+import {Links} from "../../constants/defaults";
 
 class GatesPalette extends React.Component {
     render() {
         let {cpu, actions} = this.props;
         return <div style={{display: "flex", flexWrap: "wrap"}}>
             <GateOnPallette type="N" cpuId={cpu} dis={actions.addGateToAlgo}/>
-            <GateOnPallette href={HadamardHref} type="H" cpuId={cpu} dis={actions.addGateToAlgo}/>
-            <GateOnPallette href={PauliXHref} type="X" cpuId={cpu} dis={actions.addGateToAlgo}/>
-            <GateOnPallette href={PauliYHref} type="Y" cpuId={cpu} dis={actions.addGateToAlgo}/>
-            <GateOnPallette href={PauliZHref} type="Z" cpuId={cpu} dis={actions.addGateToAlgo}/>
+            <GateOnPallette href={Links.H.img} type="H" cpuId={cpu} dis={actions.addGateToAlgo}/>
+            <GateOnPallette href={Links.X.img} type="X" cpuId={cpu} dis={actions.addGateToAlgo}/>
+            <GateOnPallette href={Links.Y.img} type="Y" cpuId={cpu} dis={actions.addGateToAlgo}/>
+            <GateOnPallette href={Links.Z.img} type="Z" cpuId={cpu} dis={actions.addGateToAlgo}/>
+            <GateOnPallette href={Links.Control.img} type="C" cpuId={cpu} dis={actions.addGateToAlgo}/>
         </div>
     }
 }

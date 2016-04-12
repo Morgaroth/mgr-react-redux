@@ -1,8 +1,7 @@
 import React, {Component, PropTypes} from "react";
 import {ItemTypes} from "../algorithm/Constants";
 import {DragSource} from "react-dnd";
-import {NoopHref} from "../../aliases/index";
-import {DefaultGateSize} from "../../constants/defaults";
+import {DefaultGateSize, Links} from "../../constants/defaults";
 
 const gateSource = {
     beginDrag(props) {
@@ -26,7 +25,7 @@ class GateOnPalette extends React.Component {
         const {size, connectDragSource, href} = this.props;
         return connectDragSource(
             <div style={{cursor: 'move'}}>
-                <img height={size} width={size*1.475} src={href || NoopHref}/>
+                <img height={size} width={size*1.475} src={href || Links.Noop.img}/>
             </div>)
     }
 }

@@ -4,6 +4,7 @@ import {DropTarget} from "react-dnd";
 
 const gateTarget = {
     drop(props, monitor) {
+        console.log("dropping monitorItem:", JSON.stringify(monitor.getItem()), "props:", props.qbit, props.position);
         monitor.getItem().publish(monitor.getItem().gate, monitor.getItem().cpuId, props.qbit, props.position)
     }
 };
@@ -21,7 +22,7 @@ class AlgorithmField extends Component {
     render() {
         const {connectDropTarget, isOver, children, qbit, position} = this.props;
         const styles = {position: 'relative', border: '1px solid white'};
-        if(isOver){
+        if (isOver) {
             styles['border'] = '1px solid green';
         }
         return connectDropTarget(

@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from "react";
-import {NoopHref} from "../aliases/index";
+import {Links} from "../constants/defaults";
 import {DefaultGateSize} from "../constants/defaults";
 
 class Gate extends React.Component {
@@ -7,11 +7,11 @@ class Gate extends React.Component {
         const {size, href, isNextStep} = this.props;
         const styles = {textAlign: 'center'};
         if (isNextStep) {
-            styles['borderLeft'] = '2px solid black'
+            styles['borderLeft'] = '2px solid red'
         }
         return (
             <div style={styles}>
-                <img height={size} width={size*1.475} src={href || NoopHref}/>
+                <img height={size} width={size*1.475} src={href || Links.Noop.img}/>
             </div>)
     }
 }
