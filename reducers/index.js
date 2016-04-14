@@ -37,17 +37,28 @@ function serverState(state = {available: [], selected: null}, action) {
     }
 }
 
-function checkIfIsControlledStep(gates, position) {
-    var onThisPosition = gates.filter(x => x.position == position);
-    return onThisPosition.filter(x => x.gate.type == 'C').length > 0;
+export function checkIfIsControlledStep(gates, position = null) {
+    if (position == undefined || position == null) {
+        return gates.filter(x => x.gate.type == 'C').length > 0;
+    }
+    return gatesAtPosition(gates, position).filter(x => x.gate.type == 'C').length > 0;
 }
 const SpecialGates = ['C', 'Cross'];
 
-function gatesAtPosition(gates, position) {
+export function gatesAtPosition(gates, position) {
     return gates.filter(x => x.position == position);
 }
-function findNormalGatesHere(gates, position) {
-    return gatesAtPosition(gates, position).filter(x =>SpecialGates.indexOf(x.gate.type) < 0)
+export function findNormalGatesHere(gates, position = null) {
+    if (position != undefined && position != null) {
+        gates = gatesAtPosition(gates, position)
+    }
+    return gates.filter(x =>SpecialGates.indexOf(x.gate.type) < 0)
+}
+export function findControlledGatesHere(gates, position = null) {
+    if (position != undefined && position != null) {
+        gates = gatesAtPosition(gates, position)
+    }
+    return gates.filter(x =>x.gate.type == 'C')
 }
 function findGatesHere(gateType, position, gates) {
     var onThisPosition = gates.filter(x => x.position == position);

@@ -1,6 +1,11 @@
 import * as types from "../constants/ActionTypes";
 import fetch from "isomorphic-fetch";
-
+import {
+    gatesAtPosition,
+    findNormalGatesHere,
+    checkIfIsControlledStep,
+    findControlledGatesHere
+} from "../reducers/index";
 
 function getCookie(cname) {
     var name = cname + "=";
@@ -122,15 +127,51 @@ export function addGateToAlgo(gate, cpuId, qbit, position) {
 }
 
 export function moveNext(cpuId) {
-    return {type: types.MOVE, cpuId: cpuId, delta: 1}
+    return (dispatch, getState) => {
+        var state = getState();
+        var cpu = state.serverState.selected;
+        var execPos = state.execution[cpu].position;
+        var gates = state.algorithms[cpu] || [];
+        var toExec = gatesAtPosition(gates, execPos);
+        var req = [];
+        if (toExec.length == 0) {
+            return dispatch({type: types.MOVE, cpuId: cpuId, delta: 1})
+        } else if (checkIfIsControlledStep(toExec)) {
+            var o = findNormalGatesHere(toExec).map(x => {
+                return {gate: x.gate.type, index: x.qbit}
+            })[0];
+            var c = findControlledGatesHere(toExec).map(x => x.qbit);
+            req.push({gate: {gate: o.gate, controlBits: c}, index: o.index})
+        } else {
+            toExec.map(g => {
+                req.push({gate: g.gate.type, index: g.qbit})
+            })
+        }
+        return fetch(state.serviceUrl + '/cpu/' + cpu, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-User-Id': getUserCookie()
+            },
+            mode: 'cors',
+            body: JSON.stringify(req)
+        }).then(response => console.log("received response", JSON.stringify()))
+            .then(() => dispatch({type: types.MOVE, cpuId: cpuId, delta: 1}))
+            .then(() => dispatch(fetchSelectedCPU()))
+    }
 }
 
 export function movePrev(cpuId) {
-    return {type: types.MOVE, cpuId: cpuId, delta: -1}
+    console.log("disabled teporarily");
+    // return {type: types.MOVE, cpuId: cpuId, delta: -1}
+    return {type: 'NOTYPE'}
 }
 
 export function reset(cpuId) {
-    return {type: types.RESET, cpuId: cpuId}
+    console.log("disabled teporarily");
+    // return {type: types.RESET, cpuId: cpuId}
+    return {type: 'NOTYPE'}
 }
 
 export function addAlgoSize(cpuId) {
@@ -142,4 +183,18 @@ export function subAlgoSize(cpuId) {
 }
 export function ensureIsMore(cpuId, than) {
     return {type: types.ENSURE_ALGORITHM_LENGTH, cpuId: cpuId, than: than}
+}
+
+export function deleteSelectedCPU() {
+    return (dispatch, getState) => {
+        return fetch(getState().serviceUrl + '/cpu/' + getState().serverState.selected, {
+            method: 'DELETE',
+            headers: {
+                'X-User-Id': getUserCookie()
+            },
+            mode: 'cors'
+        }).then(() => dispatch(selectCPU(null)))
+            .then(() => dispatch(fetchCPUsFromServer()));
+
+    }
 }

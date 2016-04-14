@@ -8,7 +8,7 @@ class ServerState extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {size: 1};
+        this.state = {size: 4};
     }
 
     render() {
@@ -17,7 +17,7 @@ class ServerState extends Component {
             let newValue = document.getElementById("new.cpu.size").valueAsNumber;
             this.setState({size: newValue})
         };
-        var header = <a>Selected CPU: {selected}</a>;
+        var header = <h3>Selected CPU: {selected}</h3>;
         var list = <List items={available.map((x) => { return "" + x.size +"qbits, "+x.id})}
                          selected={available.map((x) => x.id).indexOf(selected)}
                          multiple={false}
@@ -37,6 +37,7 @@ class ServerState extends Component {
                 </button>
                 <br/>
                 {header}
+                <button onClick={() => actions.deleteSelectedCPU()}>Delete selected CPU</button>
                 {list}
             </div>
         )
@@ -54,7 +55,7 @@ function mapStateToProps(state) {
     return {
         serviceUrl: state.serviceUrl,
         available: state.serverState.available,
-        selected: state.serverState.selected || state.serverState.available[0]
+        selected: state.serverState.selected
     };
 }
 

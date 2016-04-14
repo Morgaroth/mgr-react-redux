@@ -8,12 +8,15 @@ import * as Actions from "../actions";
 
 class App extends Component {
     render() {
-        const {serviceUrl, actions, cpuState} = this.props;
+        const {serviceUrl, actions} = this.props;
         return (
             <div>
-                <ServiceUrl serviceUrl={serviceUrl} onChange={actions.changeServiceURL}/><hr/>
-                <ServerState /> <hr/>
+                <ServiceUrl serviceUrl={serviceUrl} onChange={actions.changeServiceURL}/>
+                <hr/>
+                <ServerState />
+                <hr/>
                 <CPUState />
+                <div style={{clear: 'both'}}></div>
                 <hr/>
                 <p>Here is entire app state:</p>
                 <pre>{JSON.stringify(this.props, null, 3)}</pre>
