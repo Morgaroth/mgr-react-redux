@@ -2,7 +2,12 @@ import {combineReducers} from "redux";
 import * as types from "../constants/ActionTypes";
 import {DefaultAlgoSize} from "../constants/defaults";
 
-function serviceUrl(state = "http://localhost:9999", action) {
+export var serverUrl = "http://api.quide.jaje.ninja";
+if (window.location.href.startsWith("http://localhost")) {
+    serverUrl = "http://localhost:9999"
+}
+
+function serviceUrl(state = serverUrl, action) {
     switch (action.type) {
         case types.CHANGE_URL:
             return action.newUrl;
