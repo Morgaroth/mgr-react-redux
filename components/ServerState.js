@@ -27,6 +27,10 @@ class ServerState extends Component {
             header = <a>No available computers.</a>;
             list = undefined;
         }
+        var btn = undefined;
+        if (!(selected == undefined || selected == null)) {
+            btn = <button onClick={() => actions.deleteSelectedCPU()}>Delete selected CPU</button>
+        }
         return (
             <div>
                 <button onClick={() => actions.fetchCPUsFromServer()}>Refresh</button>
@@ -36,8 +40,12 @@ class ServerState extends Component {
                     register
                 </button>
                 <br/>
+                <button onClick={() => actions.executeCreateCPU(this.state.size, true)}>Create new CPU
+                    with {this.state.size}qbit register <b>FULL</b>
+                </button>
+                <br/>
                 {header}
-                <button onClick={() => actions.deleteSelectedCPU()}>Delete selected CPU</button>
+                {btn}
                 {list}
             </div>
         )

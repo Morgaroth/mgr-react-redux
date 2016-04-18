@@ -9,7 +9,7 @@ class CPUState extends Component {
 
     renderProb(ampl) {
         var {re, im} = ampl;
-        return <a>prob: <b>{(re * re + im * im).toFixed(3)}</b></a>
+        return <a>prob: <b>{((re * re + im * im) * 100).toFixed(0)}%</b></a>
     }
 
     renderAmpl(ampl) {
@@ -45,15 +45,29 @@ class CPUState extends Component {
         const {cpu, algorithms, enabled} = this.props;
         if (enabled) {
             return (
-                <div style={{width: '100%'}}>
-                    <div style={{float: 'left', width:'50%'}}>
+                <div>
+                    <div>
                         <Algorithm registerSize={cpu.size} gates={algorithms[cpu.id] || []}/>
                         <ControlPanel/>
                     </div>
-                    <div style={{float: 'right', width:'50%'}}>
+                    <br/>
+                    <div style={{marginLeft: '100px'}}>
                         {this.renderStates()}
                     </div>
+                    <br/>
+                    <br/>
+
                 </div>)
+            // return (
+            //     <div style={{width: '100%'}}>
+            //         <div style={{float: 'left', width:'50%'}}>
+            //             <Algorithm registerSize={cpu.size} gates={algorithms[cpu.id] || []}/>
+            //             <ControlPanel/>
+            //         </div>
+            //         <div style={{float: 'right', width:'50%'}}>
+            //             {this.renderStates()}
+            //         </div>
+            //     </div>)
         } else {
             return <div></div>
         }

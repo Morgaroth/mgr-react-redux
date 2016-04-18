@@ -8,6 +8,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import * as Actions from "../../actions";
 import {DefaultAlgoSize, Links} from "../../constants/defaults";
+import Algorithms from "../Algorithms"
 
 class Algorithm extends Component {
 
@@ -58,6 +59,7 @@ class Algorithm extends Component {
         const {registerSize, execData} = this.props;
         return (
             <div>
+                <Algorithms />
                 <GatesPalette />
                 <hr/>
                 {this.renderTable(registerSize, execData)}

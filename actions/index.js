@@ -93,7 +93,7 @@ export function fetchSelectedCPU() {
     }
 }
 
-export function executeCreateCPU(newCpuSize) {
+export function executeCreateCPU(newCpuSize, isFull = undefined) {
     return (dispatch, getState) => {
         return fetch(getState().serviceUrl + '/cpu', {
             method: 'POST',
@@ -103,7 +103,7 @@ export function executeCreateCPU(newCpuSize) {
                 'X-User-Id': getUserCookie()
             },
             mode: 'cors',
-            body: JSON.stringify({size: newCpuSize})
+            body: JSON.stringify({size: newCpuSize, full: isFull || false})
         }).then(response => response.json())
             .then(json => dispatch(handleNewCPU(json)))
             .then(() => dispatch(fetchSelectedCPU()));
@@ -121,51 +121,55 @@ export function fetchCPUsFromServer() {
 
 export function addGateToAlgo(gate, cpuId, qbit, position) {
     return (dispatch) => {
+        if (typeof gate == 'string') gate = {type: gate};
         dispatch({type: types.ADD_GATE_TO_ALG, gate: gate, cpuId: cpuId, qbit: qbit, position: position});
         dispatch(ensureIsMore(cpuId, position))
     }
 }
 
-export function moveNext(cpuId) {
-    return (dispatch, getState) => {
-        var state = getState();
-        var cpu = state.serverState.selected;
-        var execPos = state.execution[cpu].position;
-        var gates = state.algorithms[cpu] || [];
-        var toExec = gatesAtPosition(gates, execPos);
-        var req = [];
-        if (toExec.length == 0) {
-            return dispatch({type: types.MOVE, cpuId: cpuId, delta: 1})
-        } else if (checkIfIsControlledStep(toExec)) {
-            var o = findNormalGatesHere(toExec).map(x => {
-                return {gate: x.gate.type, index: x.qbit}
-            })[0];
-            var c = findControlledGatesHere(toExec).map(x => x.qbit);
-            req.push({gate: {gate: o.gate, controlBits: c}, index: o.index})
-        } else {
-            toExec.map(g => {
-                req.push({gate: g.gate.type, index: g.qbit})
-            })
+function doMove(delta, deltaPos) {
+    return (cpuId) => {
+        return (dispatch, getState) => {
+            var state = getState();
+            var cpu = state.serverState.selected;
+            var execPos = state.execution[cpu].position + deltaPos;
+            var gates = state.algorithms[cpu] || [];
+            var toExec = gatesAtPosition(gates, execPos);
+            var req = [];
+            if (toExec.length == 0) {
+                return dispatch({type: types.MOVE, cpuId: cpuId, delta: delta})
+            } else if (checkIfIsControlledStep(toExec)) {
+                var o = findNormalGatesHere(toExec).map(x => {
+                    return {gate: x.gate.type, index: x.qbit}
+                })[0];
+                var c = findControlledGatesHere(toExec).map(x => x.qbit);
+                req.push({gate: {gate: o.gate, controlBits: c}, index: o.index})
+            } else {
+                toExec.map(g => {
+                    req.push({gate: g.gate.type, index: g.qbit})
+                })
+            }
+            return fetch(state.serviceUrl + '/cpu/' + cpu, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-User-Id': getUserCookie()
+                },
+                mode: 'cors',
+                body: JSON.stringify(req)
+            }).then(response => console.log("received response", JSON.stringify()))
+                .then(() => dispatch({type: types.MOVE, cpuId: cpuId, delta: delta}))
+                .then(() => dispatch(fetchSelectedCPU()))
         }
-        return fetch(state.serviceUrl + '/cpu/' + cpu, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-User-Id': getUserCookie()
-            },
-            mode: 'cors',
-            body: JSON.stringify(req)
-        }).then(response => console.log("received response", JSON.stringify()))
-            .then(() => dispatch({type: types.MOVE, cpuId: cpuId, delta: 1}))
-            .then(() => dispatch(fetchSelectedCPU()))
     }
+};
+export function moveNext(cpuId) {
+    return doMove(1, 0)(cpuId);
 }
 
 export function movePrev(cpuId) {
-    console.log("disabled teporarily");
-    // return {type: types.MOVE, cpuId: cpuId, delta: -1}
-    return {type: 'NOTYPE'}
+    return doMove(-1, -1)(cpuId);
 }
 
 export function reset(cpuId) {
