@@ -40,8 +40,14 @@ class ServerState extends Component {
                     register
                 </button>
                 <br/>
-                <button onClick={() => actions.executeCreateCPU(this.state.size, true)}>Create new CPU
-                    with {this.state.size}qbit register <b>FULL</b>
+                <button onClick={() => actions.executeCreateCPU(this.state.size, 'customap')}>Create new CPU
+                    with {this.state.size}qbit register <b>CUSTOM-MAP</b>
+                </button><br/>
+                <button onClick={() => actions.executeCreateCPU(this.state.size, 'sync')}>Create new CPU
+                    with {this.state.size}qbit register <b>SYNC</b>
+                </button><br/>
+                <button onClick={() => actions.executeCreateCPU(this.state.size, 'nodeath')}>Create new CPU
+                    with {this.state.size}qbit register <b>NO-DEATH</b>
                 </button>
                 <br/>
                 {header}

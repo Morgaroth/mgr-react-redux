@@ -93,7 +93,7 @@ export function fetchSelectedCPU() {
     }
 }
 
-export function executeCreateCPU(newCpuSize, isFull = undefined) {
+export function executeCreateCPU(newCpuSize, type = undefined) {
     return (dispatch, getState) => {
         return fetch(getState().serviceUrl + '/cpu', {
             method: 'POST',
@@ -103,7 +103,7 @@ export function executeCreateCPU(newCpuSize, isFull = undefined) {
                 'X-User-Id': getUserCookie()
             },
             mode: 'cors',
-            body: JSON.stringify({size: newCpuSize, full: isFull || false})
+            body: JSON.stringify({size: newCpuSize, type: type})
         }).then(response => response.json())
             .then(json => dispatch(handleNewCPU(json)))
             .then(() => dispatch(fetchSelectedCPU()));
